@@ -1,0 +1,22 @@
+# Ignore output folders with downloaded PDFs and lists
+Output/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment / virtualenv
+env/
+venv/
+.venv/
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and temp files
+*.log
+*.tmp
