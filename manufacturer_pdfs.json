@@ -1,0 +1,26 @@
+{
+    "Soprema": {
+        "base": "https://www.soprema.ca/en/products/",
+        "products": []
+    },
+    "Firestone": {
+        "base": "https://www.firestonebpco.com/en/products/",
+        "products": []
+    },
+    "Carlisle": {
+        "base": "https://www.carlislesyntec.com/products/",
+        "products": []
+    },
+    "IKO": {
+        "base": "https://www.iko.com/na/roofing-products/",
+        "products": []
+    },
+    "Tremco": {
+        "base": "https://www.tremcosealants.com/products/",
+        "products": []
+    },
+    "Sika": {
+        "base": "https://usa.sika.com/en/products.html",
+        "products": []
+    }
+}

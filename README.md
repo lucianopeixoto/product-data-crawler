@@ -1,123 +1,82 @@
-# MSDS Crawler
+# 🛠 Product Data Crawler (MSDS & PDS)
 
-A Python web crawler that searches, downloads, and organizes Safety Data Sheets (SDS/MSDS/PDS) for a list of materials, with structured PDF naming and CSV/XML indexing.
+A Python tool to automatically download **Safety Data Sheets (MSDS/SDS)** and **Product Data Sheets (PDS/TDS)** for roofing and construction materials.
 
----
+It supports:
 
-## 🚀 Features
-
-- 🔍 Smart search for SDS/MSDS/PDS PDFs online
-- 📄 Automatic download and standardized file naming
-- 🧠 Handles inconsistent material naming using multiple search queries
-- 📁 Organized output folder (`MSDS/`)
-- 📊 Generates structured indexes:
-  - `index.csv`
-  - `index.xml`
-- 🧾 Flexible input methods:
-  - Manual entry
-  - File input (one material per line)
+* **Known manufacturer products** via a JSON lookup (dynamic URL concatenation)
+* **Fallback search** using DuckDuckGo for unknown or new products
+* Generates organized output folders and index files in **CSV and XML**
 
 ---
 
-## 📂 Output Structure
+## ⚡ Features
 
+* Automatic creation of folders:
+
+```
 MSDS/
-│
-├── 01 - Material A PDS.pdf
-├── 02 - Material B PDS.pdf
-├── ...
-│
-├── index.csv
-└── index.xml
+  ├─ MSDS/       # downloaded MSDS PDFs
+  ├─ PDS/        # downloaded PDS PDFs
+  └─ lists/      # CSV and XML indexes
+```
+
+* Supports **manual or file input** of product names
+* Normalizes product names for better search results
+* Records download status in **indexes**
 
 ---
 
-## 🛠️ Installation
+## 📋 Usage
 
-Install dependencies:
+### 1. File input (recommended)
 
-pip install requests beautifulsoup4 pandas lxml tqdm
+Create a text file with **one product per line**, e.g. `materials.txt`:
 
-TODO (REVIEW README.MD LATER)
+```
+soprastar gr
+soprasmart board
+duotack
+```
 
-▶️ Usage
+Then run:
 
-Run the script:
+```bash
+python msds-crawler.py materials.txt
+```
 
-python crawler.py
-Input Options
-1. Manual Input
+### 2. Manual input
 
-Enter materials one by one:
+If no file is provided, the script prompts you:
 
-> Asphalt Primer
-> EPDM Membrane
+```
+> soprasmart board
+> duotack
 > done
-2. File Input
+```
 
-Provide a .txt file with one material per line:
+---
 
-asphalt primer
-epdm membrane
-polyiso insulation
-🧠 How It Works
+## ⚙️ JSON Manufacturer Lookup
 
-For each material, the crawler:
+Edit `manufacturer_pdfs.json` to add or update manufacturers and base URLs. Example:
 
-Generates multiple search queries, such as:
+```json
+{
+    "Soprema": {
+        "base": "https://www.soprema.ca/en/products/",
+        "products": []
+    }
+}
+```
 
-"Material SDS PDF"
+* The crawler will first try to generate URLs from this base
+* Falls back to DuckDuckGo search if no PDF is found
 
-"Material MSDS PDF"
+---
 
-"Material technical data sheet PDF"
+## 📌 Notes
 
-Scrapes search results using DuckDuckGo
-
-Identifies the first valid PDF link
-
-Downloads and renames the file using a standardized format
-
-Logs results into CSV and XML indexes
-
-⚠️ Limitations
-
-Some websites block automated requests
-
-Some documents are behind JavaScript or login portals
-
-The first PDF result may not always be the most accurate
-
-🔧 Future Improvements
-
-Selenium-based browser automation for better compatibility
-
-Manufacturer-specific search optimization
-
-PDF metadata extraction
-
-Web interface for managing and reviewing documents
-
-Integration with estimating or project workflows
-
-📌 Notes
-
-File names are sanitized to remove invalid characters
-
-Files are indexed sequentially (01, 02, 03...)
-
-Materials without a found PDF are still recorded in the index files
-
-📄 License
-
-This project is open-source and free to use.
-
-👷 Use Case
-
-Useful for professionals who need fast access to material documentation:
-
-Construction estimators
-
-Project managers
-
-Safety and compliance teams
+* Uses Python libraries: `requests`, `beautifulsoup4`, `pandas`, `tqdm`, `lxml`
+* Can be extended with **Selenium** for JS-heavy portals in the future
+* Designed for roofing and construction material products, but easily adaptable
