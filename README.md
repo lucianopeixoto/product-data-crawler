@@ -1,82 +1,95 @@
-# 🛠 Product Data Crawler (MSDS & PDS)
+# 🛠 Product Data Crawler (MSDS & PDS) — v2
 
-A Python tool to automatically download **Safety Data Sheets (MSDS/SDS)** and **Product Data Sheets (PDS/TDS)** for roofing and construction materials.
+A tool to build **submittal packages** of Safety Data Sheets (SDS/MSDS) and
+Product Data Sheets (PDS/TDS) for roofing and construction materials — for
+your own company or for other contractors. Paste a product list, get a ZIP
+with the PDFs plus CSV/XML indexes.
 
-It supports:
+## What changed in v2
 
-* **Known manufacturer products** via a JSON lookup (dynamic URL concatenation)
-* **Fallback search** using DuckDuckGo for unknown or new products
-* Generates organized output folders and index files in **CSV and XML**
+v1 guessed PDF URLs (`base + product + "-msds.pdf"`), stopped at the first
+manufacturer that answered 200, and saved whatever came back — which is how
+a Soprema product became a blank PDF from IKO. v2 fixes both problems:
 
----
+- **No guessed URLs.** It searches site-by-site (`site:soprema.ca …`,
+  `site:iko.com …`, …) in the order in `manufacturers.json`, so a PDF is
+  only attributed to a manufacturer when it actually lives on that
+  manufacturer's domain.
+- **No blind saves.** A download is only kept if it is a real PDF:
+  Content-Type is PDF (when the server says), the body starts with `%PDF`,
+  and it is larger than 2 KB. A failed candidate is discarded and the next
+  one is tried. Nothing blank or HTML is ever saved as a `.pdf`.
+- **Both search problems fixed:** manufacturer-site search first, then a
+  general web search (DuckDuckGo, then Bing) as fallback, with several
+  candidates tried per product instead of just the first link.
+- **Web UI + ZIP:** a simple browser interface that builds a downloadable
+  submittal ZIP. The command line still works for scripts and big lists.
+- **No data extracted from PDFs**, by design — the output is the documents
+  themselves plus the indexes.
+- **Cleaner install:** only `requests`, `beautifulsoup4`, `lxml`. The v1
+  `requirements.txt` listed `urllib.parse`, which is not a pip package,
+  and pandas/tqdm are no longer needed.
 
-## ⚡ Features
+## Install
 
-* Automatic creation of folders:
-
-```
-MSDS/
-  ├─ MSDS/       # downloaded MSDS PDFs
-  ├─ PDS/        # downloaded PDS PDFs
-  └─ lists/      # CSV and XML indexes
-```
-
-* Supports **manual or file input** of product names
-* Normalizes product names for better search results
-* Records download status in **indexes**
-
----
-
-## 📋 Usage
-
-### 1. File input (recommended)
-
-Create a text file with **one product per line**, e.g. `materials.txt`:
-
-```
-soprastar gr
-soprasmart board
-duotack
+```bash
+pip install -r requirements.txt
 ```
 
-Then run:
+## Web interface (new)
+
+```bash
+python webapp.py
+# open http://127.0.0.1:8000
+```
+
+Paste products (one per line), tick SDS and/or PDS, pick the country, and
+download the submittal ZIP from the job page. Keep browser lists modest
+(under ~20 products); use the CLI for large lists.
+
+## Command line (same as v1, plus options)
 
 ```bash
 python msds-crawler.py materials.txt
+python msds-crawler.py materials.txt --country US --out submittal-1
+python msds-crawler.py materials.txt --no-pds
 ```
 
-### 2. Manual input
+With no file, products are typed manually, one per line, `done` to finish.
 
-If no file is provided, the script prompts you:
+Output:
 
 ```
-> soprasmart board
-> duotack
-> done
+MSDS/
+  ├─ MSDS/       # downloaded SDS PDFs
+  ├─ PDS/        # downloaded PDS PDFs
+  └─ lists/      # msds_index.csv/.xml, pds_index.csv/.xml
+MSDS.zip         # the whole submittal package
 ```
 
----
+Each index row records: product, manufacturer (from the PDF's domain, or
+blank for a general web hit), file name, source URL, downloaded yes/no,
+status (`ok`, `not_found`, `invalid_pdf`, `http_…`, …), and size in KB.
+A product with no valid PDF is recorded as `not_found` — never as a file.
 
-## ⚙️ JSON Manufacturer Lookup
+## Manufacturers and country preference
 
-Edit `manufacturer_pdfs.json` to add or update manufacturers and base URLs. Example:
+Edit `manufacturers.json` to add, remove, or re-order manufacturers. The
+default country is Canada (`CA`); use `--country US` or `--country ALL`
+on the CLI, or the dropdown in the web UI, to change it. The current list
+covers the big roofing names in Canada: Soprema, IKO, Carlisle, Firestone /
+Elevate, Tremco, Sika, GAF, Owens Corning, Johns Manville, Siplast,
+Polyglass, Henry, Malarkey, CertainTeed, Derbigum, Kemper System, Garland,
+Hydrotech. If a manufacturer changes its site, just update its domains
+here — no code change needed.
 
-```json
-{
-    "Soprema": {
-        "base": "https://www.soprema.ca/en/products/",
-        "products": []
-    }
-}
+## Tests
+
+```bash
+python -m unittest discover -s tests -v
+# or: python tests/test_crawler.py
 ```
 
-* The crawler will first try to generate URLs from this base
-* Falls back to DuckDuckGo search if no PDF is found
-
----
-
-## 📌 Notes
-
-* Uses Python libraries: `requests`, `beautifulsoup4`, `pandas`, `tqdm`, `lxml`
-* Can be extended with **Selenium** for JS-heavy portals in the future
-* Designed for roofing and construction material products, but easily adaptable
+Tests are offline (search and download are faked) and cover PDF validation,
+manufacturer-domain matching, ZIP/index output, and the
+invalid-candidate-is-skipped path.

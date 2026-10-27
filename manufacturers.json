@@ -1,0 +1,24 @@
+{
+  "country_default": "CA",
+  "note": "Edit this file to add, remove, or re-order manufacturers. The crawler searches site-by-site (site:domain) in this order, so a product is only attributed to a manufacturer when the PDF actually lives on that manufacturer's domain. That is what stops the old bug where a blank PDF from the wrong manufacturer was saved. Set country to CA, US, or ALL. Domains are matched by suffix, so subdomains and CDNs under the same domain still count.",
+  "manufacturers": [
+    {"name": "Soprema", "country": "CA", "domains": ["soprema.ca", "soprema.com"]},
+    {"name": "IKO", "country": "CA", "domains": ["iko.com"]},
+    {"name": "Carlisle", "country": "CA", "domains": ["carlislesyntec.com"]},
+    {"name": "Firestone / Elevate", "country": "CA", "domains": ["firestonebpco.com", "elevatebuildingproducts.com"]},
+    {"name": "Tremco", "country": "CA", "domains": ["tremcoroofing.com", "tremcosealants.com"]},
+    {"name": "Sika", "country": "CA", "domains": ["can.sika.com", "usa.sika.com", "sika.com"]},
+    {"name": "GAF", "country": "CA", "domains": ["gaf.com"]},
+    {"name": "Owens Corning", "country": "CA", "domains": ["owenscorning.com"]},
+    {"name": "Johns Manville", "country": "CA", "domains": ["jm.com"]},
+    {"name": "Siplast", "country": "CA", "domains": ["siplast.com"]},
+    {"name": "Polyglass", "country": "CA", "domains": ["polyglass.com"]},
+    {"name": "Henry", "country": "CA", "domains": ["henry.com"]},
+    {"name": "Malarkey", "country": "CA", "domains": ["malarkeyroofing.com"]},
+    {"name": "CertainTeed", "country": "CA", "domains": ["certainteed.com"]},
+    {"name": "Derbigum", "country": "CA", "domains": ["derbigum.com"]},
+    {"name": "Kemper System", "country": "CA", "domains": ["kemper-system.com"]},
+    {"name": "Garland", "country": "CA", "domains": ["garlandco.com"]},
+    {"name": "Hydrotech", "country": "CA", "domains": ["hydrotechusa.com"]}
+  ]
+}
