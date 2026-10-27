@@ -39,11 +39,22 @@ h1{font-size:1.6rem} textarea{width:100%;height:220px} button{padding:.6rem 1.4r
 .muted{color:#666} .ok{color:#0a7a2f} .bad{color:#b00} table{border-collapse:collapse} td,th{border:1px solid #ccc;padding:.3rem .6rem;text-align:left}</style>
 </head><body>
 <h1>Product Data Crawler</h1>
-<p class="muted">Paste products, one per line. The tool searches manufacturer sites first
-(Canada by default, configurable), checks every PDF is real before saving it,
-and bundles everything into a downloadable submittal ZIP.</p>
+<p class="muted">Paste products, one per line. The tool goes directly to each manufacturer's own
+website (Canada by default, configurable), checks every PDF is real before saving it,
+and bundles everything into a downloadable submittal ZIP. No general web search: if no
+maker's own site has the document, the product is reported as not found.</p>
 <form method="post" action="/run">
-<p><label>Products (one per line):<br><textarea name="products" placeholder="Sopralene Flam 180&#10;Colphene 3000&#10;Duotack"></textarea></label></p>
+<p><label>Products (one per line):<br><textarea name="products" placeholder="Sopralene Flam 180&#10;Sika: Sikaflex-1A&#10;Duotack"></textarea></label></p>
+<p class="muted">A line can name its maker directly, e.g. <code>Sika: Sikaflex-1A</code>. If no maker
+is named and no listed manufacturer's own site has a matching document, the product is
+reported as not found — it is never guessed from a general web search.</p>
+<p><label>Manufacturer:
+<select name="manufacturer"><option value="" selected>All listed manufacturers</option>
+<option>Soprema</option><option>IKO</option><option>Carlisle</option><option>Firestone / Elevate</option>
+<option>Tremco</option><option>Sika</option><option>GAF</option><option>Owens Corning</option>
+<option>Johns Manville</option><option>Siplast</option><option>Polyglass</option><option>Henry</option>
+<option>Malarkey</option><option>CertainTeed</option><option>Derbigum</option><option>Kemper System</option>
+<option>Garland</option><option>Hydrotech</option></select></label></p>
 <p><label><input type="checkbox" name="msds" checked> Safety Data Sheets (SDS/MSDS)</label>
 &nbsp;<label><input type="checkbox" name="pds" checked> Product Data Sheets (PDS/TDS)</label></p>
 <p><label>Country preference:
@@ -72,14 +83,15 @@ table{{border-collapse:collapse}} td,th{{border:1px solid #ccc;padding:.3rem .6r
 <p><a href="/">Start another package</a></p></body></html>"""
 
 
-def run_job(job_id, products, want_msds, want_pds, country):
+def run_job(job_id, products, want_msds, want_pds, country, manufacturer=None):
     out_dir = os.path.join(JOBS_DIR, job_id)
     try:
         JOBS[job_id]["status"] = "running"
         manufacturers = load_manufacturers(country=country)
         msds, pds = process_materials(
             products, manufacturers, out_dir, want_msds, want_pds,
-            progress=lambda m: JOBS[job_id].update(message=m))
+            progress=lambda m: JOBS[job_id].update(message=m),
+            manufacturer_filter=manufacturer or None)
         zip_path = os.path.join(JOBS_DIR, f"{job_id}.zip")
         make_zip(out_dir, zip_path)
         found = sum(1 for r in msds + pds if r["Downloaded"])
@@ -140,7 +152,8 @@ class Handler(BaseHTTPRequestHandler):
         threading.Thread(target=run_job, args=(
             job_id, products,
             "msds" in fields, "pds" in fields,
-            fields.get("country", ["CA"])[0]), daemon=True).start()
+            fields.get("country", ["CA"])[0],
+            fields.get("manufacturer", [""])[0]), daemon=True).start()
         self.send_response(303)
         self.send_header("Location", f"/job/{job_id}")
         self.end_headers()
