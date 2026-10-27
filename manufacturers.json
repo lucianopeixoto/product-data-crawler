@@ -1,0 +1,186 @@
+{
+  "country_default": "CA",
+  "manufacturers": [
+    {
+      "adapter": null,
+      "adapter_note": "Soprema's catalogue loads through its on-site JavaScript search and its product API needs a login, so there is no static direct adapter yet \u2013 check soprema.ca manually",
+      "country": "CA",
+      "domains": [
+        "soprema.ca",
+        "soprema.com",
+        "soprema.bynder.com",
+        "files.soprema.ca"
+      ],
+      "name": "Soprema"
+    },
+    {
+      "adapter": "sitemap",
+      "country": "CA",
+      "domains": [
+        "iko.com",
+        "mediaresourcecenter.iko.com"
+      ],
+      "name": "IKO",
+      "page_paths": [
+        "/na/product/",
+        "/na/document/"
+      ],
+      "sitemap_urls": [
+        "https://www.iko.com/na/product-sitemap.xml",
+        "https://www.iko.com/na/document-sitemap.xml"
+      ]
+    },
+    {
+      "adapter": null,
+      "adapter_note": "Carlisle's document search loads through its on-site JavaScript search \u2013 check carlislesyntec.com manually",
+      "country": "CA",
+      "domains": [
+        "carlislesyntec.com"
+      ],
+      "name": "Carlisle"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "firestonebpco.com",
+        "elevatebuildingproducts.com"
+      ],
+      "name": "Firestone / Elevate"
+    },
+    {
+      "adapter": "sitemap",
+      "country": "CA",
+      "domains": [
+        "tremcoroofing.com",
+        "tremcosealants.com"
+      ],
+      "name": "Tremco",
+      "page_paths": [
+        "/products/"
+      ],
+      "sitemap_url": "https://www.tremcoroofing.com/sitemap.xml"
+    },
+    {
+      "adapter": "sika_serp",
+      "country": "CA",
+      "domains": [
+        "can.sika.com",
+        "usa.sika.com",
+        "sika.com"
+      ],
+      "name": "Sika",
+      "search_url": "https://can.sika.com/en/serp.html?q={q}"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "gaf.com"
+      ],
+      "name": "GAF"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "owenscorning.com"
+      ],
+      "name": "Owens Corning"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "jm.com"
+      ],
+      "name": "Johns Manville"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "siplast.com"
+      ],
+      "name": "Siplast"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "polyglass.com"
+      ],
+      "name": "Polyglass"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "henry.com"
+      ],
+      "name": "Henry"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "malarkeyroofing.com"
+      ],
+      "name": "Malarkey"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "certainteed.com"
+      ],
+      "name": "CertainTeed"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "derbigum.com"
+      ],
+      "name": "Derbigum"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "kemper-system.com"
+      ],
+      "name": "Kemper System"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "garlandco.com"
+      ],
+      "name": "Garland"
+    },
+    {
+      "adapter": null,
+      "adapter_note": "no direct adapter verified yet \u2013 check the manufacturer's own site manually",
+      "country": "CA",
+      "domains": [
+        "hydrotechusa.com"
+      ],
+      "name": "Hydrotech"
+    }
+  ],
+  "note": "v3: the crawler goes DIRECTLY to each manufacturer's own website and nowhere else. No general web search, no guessed URLs. Adapters verified live on 2026-10-27: Sika (its own search page -> product page -> PDF links), Tremco (its own sitemap -> product page -> PDF links), IKO (its own product/document sitemaps -> product page -> PDF links). Manufacturers with adapter=null have no verified static adapter yet (their catalogues load through JavaScript search, or their API needs a login); for those the crawler reports NOT FOUND with the reason instead of guessing from a web search. To add a manufacturer, add an entry here with an adapter (sika_serp or sitemap) and its sitemap/search URLs \u2014 the code does the rest. Set country to CA, US, or ALL. Domains are matched by suffix, so subdomains and asset hosts under the same domain still count."
+}

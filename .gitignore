@@ -20,3 +20,8 @@ venv/
 # Logs and temp files
 *.log
 *.tmp
+
+# v2 outputs
+jobs/
+MSDS/
+*.zip
